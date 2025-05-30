@@ -1,4 +1,4 @@
-package com.example.savenotes
+package com.example.savenotes.feature.main
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
