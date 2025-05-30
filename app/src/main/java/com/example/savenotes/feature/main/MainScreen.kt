@@ -2,8 +2,10 @@ package com.example.savenotes.feature.main
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -56,6 +58,7 @@ fun MainScreen(
                     viewModel.setText(text)
                 }
             )
+            Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = { viewModel.addNote() }
             ) {
@@ -84,14 +87,14 @@ fun MainScreen(
              */
 
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(.dp),
+                columns = GridCells.Adaptive(70.dp),
             ) {
                 items(
                     count = notes.size
                 ) {
                     Text(
                         modifier = Modifier
-                            .padding(12.dp)
+                            .padding(10.dp)
                             .fillMaxWidth(),
                         text = notes[it].text
                     )
