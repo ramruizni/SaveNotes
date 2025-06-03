@@ -1,4 +1,4 @@
-package com.example.savenotes
+package com.example.savenotes.feature.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
