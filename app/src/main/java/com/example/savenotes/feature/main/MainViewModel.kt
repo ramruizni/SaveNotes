@@ -1,7 +1,13 @@
 package com.example.savenotes.feature.main
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.Room
+import com.example.savenotes.database.AppDatabase
+import com.example.savenotes.database.Note
+import com.example.savenotes.database.NoteDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,10 +21,6 @@ data class MainState(
     val text: String = ""
 )
 
-data class Note(
-    val text: String,
-)
-
 class MainViewModel: ViewModel() {
 
     private val _state = MutableStateFlow(MainState())
@@ -30,16 +32,31 @@ class MainViewModel: ViewModel() {
     private val _notes = MutableStateFlow<List<Note>>(emptyList())
     val notes = _notes.asStateFlow()
 
-    init {
-        // no sirve
-        //val list = listOf<String>()
-        //list =+ "Hello"
+    private var noteDao: NoteDao? = null
 
-        val list = mutableListOf<String>()
-        list += "Hello"
+    fun initializeDatabase(context: Context) {
+        val db = Room.databaseBuilder(
+            context,
+            AppDatabase::class.java, "notes-db"
+        ).build()
 
-        // Homework
-        // Haga lo mismo con un LazyVerticalGrid
+        noteDao = db.noteDao()
+
+        refreshNotes()
+    }
+
+    private fun refreshNotes() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val notesInDb = noteDao?.getAll() ?: emptyList()
+            _notes.update { notesInDb }
+        }
+    }
+
+    private fun insertNote(note: Note) {
+        viewModelScope.launch(Dispatchers.IO) {
+            noteDao?.insert(note)
+            refreshNotes()
+        }
     }
 
     fun setText(text: String) {
@@ -55,11 +72,7 @@ class MainViewModel: ViewModel() {
             return
         }
 
-        //val newList = _notes.value.toMutableList()
-        //newList.add(Note(text))
-        //_notes.update { newList }
-
-        _notes.update { it + Note(text) }
+        insertNote(Note(text = text))
 
         _state.update { it.copy(text = "") }
     }
