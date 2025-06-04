@@ -34,19 +34,49 @@ class MainViewModel: ViewModel() {
 
     private var noteDao: NoteDao? = null
 
+    //El Context de Android es necesario para que Room pueda acceder al sistema de
+    // archivos de la aplicación y crear o abrir el archivo de la base de datos.
     fun initializeDatabase(context: Context) {
+        // Se utiliza el constructor builder de Room para configurar y crear la
+        // instancia de la base de datos
         val db = Room.databaseBuilder(
+            // se le tiene que pasar context para Room determine dónde almacenar el
+            //archivo de la base de datos
             context,
+            // 'AppDatabase::class.java' como segundo argumento, especifica la clase
+            // que define la base de datos Room. '::class.java' es la sintaxis de
+            // Kotlin para obtener la representación de clase Java de una clase Kotlin,
+            // que es lo que espera Room.
             AppDatabase::class.java, "notes-db"
+            // "note-db" es el nombre del archivo que se utilizará para almacenar la
+            // base de datos SQLite en el dispositivo. Si el archivo no existe, Room
+            // lo creará. Si ya existe, Room lo abrirá.
         ).build()
+        // '.build()' finaliza la configuración y crea la instancia real de la base
+        // de datos
 
+        //Aquí se accede a los DAOs de la base de datos a través de su instancia
         noteDao = db.noteDao()
 
         refreshNotes()
     }
 
     private fun refreshNotes() {
+        //'viewModelScope' proporciona un CoroutineScope que está vinculado al ciclo
+        // de vida del ViewModel.
+        //'.launch(...)' es un constructor de coroutines. Lanza una nueva coroutine sin
+        // bloquear el hilo actual.
+        //Dispatchers.IO es un despachador que está optimizado para operaciones de
+        // entrada/salida (I/O) que consumen mucho tiempo, como operaciones de red,
+        // lectura/escritura de archivos, y operaciones de base de datos. Entonces con
+        // esto nos aseguramos que la llamada a la base de datos no se ejecute en el hilo
+        // principal, evitando bloquear la UI
         viewModelScope.launch(Dispatchers.IO) {
+            //El operador ?. permite llamar a getAll() solo si noteDao no es nulo.
+            // getAll(): Este es el metodo suspend que definimos en el NoteDao para
+            // obtener todas las notas de la base de datos. Devuelve List<Note>.
+            //'?: emptyList()' significa que si noteDao es nulo, entonces
+            // emptyList() se ejecutará, y notesInDb se asignará a una lista vacía.
             val notesInDb = noteDao?.getAll() ?: emptyList()
             _notes.update { notesInDb }
         }
@@ -54,6 +84,12 @@ class MainViewModel: ViewModel() {
 
     private fun insertNote(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
+            //? se utiliza porque noteDao podría ser nulo. Si noteDao es nulo, la
+            // llamada a insert(note) simplemente no ocurrirá, evitando un
+            // NullPointerException.
+            //' noteDao?.insert(note)' llama al metodo suspend fun insert(note: Note),
+            // y luego room se encarga de ejecutar esta operación de inserción en la
+            // base de datos SQLite en un hilo de fondo.
             noteDao?.insert(note)
             refreshNotes()
         }
