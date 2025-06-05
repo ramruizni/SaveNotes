@@ -3,10 +3,9 @@ package com.example.savenotes.feature.main
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
-import com.example.savenotes.database.AppDatabase
 import com.example.savenotes.database.Note
-import com.example.savenotes.database.NoteDao
+import com.example.savenotes.repository.NoteRepository
+import com.example.savenotes.repository.NoteRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,31 +31,10 @@ class MainViewModel: ViewModel() {
     private val _notes = MutableStateFlow<List<Note>>(emptyList())
     val notes = _notes.asStateFlow()
 
-    private var noteDao: NoteDao? = null
+    private var noteRepository: NoteRepository? = null
 
-    //El Context de Android es necesario para que Room pueda acceder al sistema de
-    // archivos de la aplicación y crear o abrir el archivo de la base de datos.
-    fun initializeDatabase(context: Context) {
-        // Se utiliza el constructor builder de Room para configurar y crear la
-        // instancia de la base de datos
-        val db = Room.databaseBuilder(
-            // se le tiene que pasar context para Room determine dónde almacenar el
-            //archivo de la base de datos
-            context,
-            // 'AppDatabase::class.java' como segundo argumento, especifica la clase
-            // que define la base de datos Room. '::class.java' es la sintaxis de
-            // Kotlin para obtener la representación de clase Java de una clase Kotlin,
-            // que es lo que espera Room.
-            AppDatabase::class.java, "notes-db"
-            // "note-db" es el nombre del archivo que se utilizará para almacenar la
-            // base de datos SQLite en el dispositivo. Si el archivo no existe, Room
-            // lo creará. Si ya existe, Room lo abrirá.
-        ).build()
-        // '.build()' finaliza la configuración y crea la instancia real de la base
-        // de datos
-
-        //Aquí se accede a los DAOs de la base de datos a través de su instancia
-        noteDao = db.noteDao()
+    fun initializeRepository(context: Context) {
+        noteRepository = NoteRepositoryImpl(context)
 
         refreshNotes()
     }
@@ -77,7 +55,7 @@ class MainViewModel: ViewModel() {
             // obtener todas las notas de la base de datos. Devuelve List<Note>.
             //'?: emptyList()' significa que si noteDao es nulo, entonces
             // emptyList() se ejecutará, y notesInDb se asignará a una lista vacía.
-            val notesInDb = noteDao?.getAll() ?: emptyList()
+            val notesInDb = noteRepository?.getAll() ?: emptyList()
             _notes.update { notesInDb }
         }
     }
@@ -90,7 +68,7 @@ class MainViewModel: ViewModel() {
             //' noteDao?.insert(note)' llama al metodo suspend fun insert(note: Note),
             // y luego room se encarga de ejecutar esta operación de inserción en la
             // base de datos SQLite en un hilo de fondo.
-            noteDao?.insert(note)
+            noteRepository?.insert(note)
             refreshNotes()
         }
     }

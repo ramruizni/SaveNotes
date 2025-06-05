@@ -35,7 +35,7 @@ fun MainScreen(
     val notes by viewModel.notes.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = context) {
-        viewModel.initializeDatabase(context)
+        viewModel.initializeRepository(context)
     }
 
     LaunchedEffect(key1 = context) {
