@@ -91,6 +91,14 @@ class MainViewModel: ViewModel() {
         _state.update { it.copy(text = "") }
     }
 
+    fun deleteNote(note: Note) {
+        viewModelScope.launch(Dispatchers.IO) {
+            noteRepository?.delete(note)
+            refreshNotes()
+            _events.send(Event.ShowMessage("Deleted note!"))
+        }
+    }
+
     sealed class Event {
         data class ShowMessage(val message: String): Event()
     }
