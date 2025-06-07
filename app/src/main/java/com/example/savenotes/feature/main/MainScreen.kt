@@ -38,10 +38,6 @@ fun MainScreen(
     val notes by viewModel.notes.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = context) {
-        viewModel.initializeRepository(context)
-    }
-
-    LaunchedEffect(key1 = context) {
         viewModel.events.collect { event ->
             when (event) {
                 is MainViewModel.Event.ShowMessage -> {

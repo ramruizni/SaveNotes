@@ -1,11 +1,10 @@
 package com.example.savenotes.feature.main
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savenotes.database.Note
 import com.example.savenotes.repository.NoteRepository
-import com.example.savenotes.repository.NoteRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class MainState(
     val isLoading: Boolean = false,
@@ -20,7 +20,10 @@ data class MainState(
     val text: String = ""
 )
 
-class MainViewModel: ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val noteRepository: NoteRepository,
+) : ViewModel() {
 
     private val _state = MutableStateFlow(MainState())
     val state = _state.asStateFlow()
@@ -31,11 +34,7 @@ class MainViewModel: ViewModel() {
     private val _notes = MutableStateFlow<List<Note>>(emptyList())
     val notes = _notes.asStateFlow()
 
-    private var noteRepository: NoteRepository? = null
-
-    fun initializeRepository(context: Context) {
-        noteRepository = NoteRepositoryImpl(context)
-
+    init {
         refreshNotes()
     }
 
@@ -55,7 +54,7 @@ class MainViewModel: ViewModel() {
             // obtener todas las notas de la base de datos. Devuelve List<Note>.
             //'?: emptyList()' significa que si noteDao es nulo, entonces
             // emptyList() se ejecutará, y notesInDb se asignará a una lista vacía.
-            val notesInDb = noteRepository?.getAll() ?: emptyList()
+            val notesInDb = noteRepository.getAll()
             _notes.update { notesInDb }
         }
     }
@@ -68,7 +67,7 @@ class MainViewModel: ViewModel() {
             //' noteDao?.insert(note)' llama al metodo suspend fun insert(note: Note),
             // y luego room se encarga de ejecutar esta operación de inserción en la
             // base de datos SQLite en un hilo de fondo.
-            noteRepository?.insert(note)
+            noteRepository.insert(note)
             refreshNotes()
         }
     }
@@ -93,13 +92,13 @@ class MainViewModel: ViewModel() {
 
     fun deleteNote(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
-            noteRepository?.delete(note)
+            noteRepository.delete(note)
             refreshNotes()
             _events.send(Event.ShowMessage("Deleted note!"))
         }
     }
 
     sealed class Event {
-        data class ShowMessage(val message: String): Event()
+        data class ShowMessage(val message: String) : Event()
     }
 }
