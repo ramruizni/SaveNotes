@@ -8,8 +8,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,33 +35,33 @@ class MainViewModel @Inject constructor(
     private val _events = Channel<Event>()
     val events = _events.receiveAsFlow()
 
-    private val _notes = MutableStateFlow<List<Note>>(emptyList())
+    // Forma 1
+    /*private val _notes = MutableStateFlow<List<Note>>(emptyList())
     val notes = _notes.asStateFlow()
 
     init {
-        refreshNotes()
-    }
-
-    private fun refreshNotes() {
-        //'viewModelScope' proporciona un CoroutineScope que está vinculado al ciclo
-        // de vida del ViewModel.
-        //'.launch(...)' es un constructor de coroutines. Lanza una nueva coroutine sin
-        // bloquear el hilo actual.
-        //Dispatchers.IO es un despachador que está optimizado para operaciones de
-        // entrada/salida (I/O) que consumen mucho tiempo, como operaciones de red,
-        // lectura/escritura de archivos, y operaciones de base de datos. Entonces con
-        // esto nos aseguramos que la llamada a la base de datos no se ejecute en el hilo
-        // principal, evitando bloquear la UI
         viewModelScope.launch(Dispatchers.IO) {
-            //El operador ?. permite llamar a getAll() solo si noteDao no es nulo.
-            // getAll(): Este es el metodo suspend que definimos en el NoteDao para
-            // obtener todas las notas de la base de datos. Devuelve List<Note>.
-            //'?: emptyList()' significa que si noteDao es nulo, entonces
-            // emptyList() se ejecutará, y notesInDb se asignará a una lista vacía.
-            val notesInDb = noteRepository.getAll()
-            _notes.update { notesInDb }
+            noteRepository.observeAll().collect { notesInDb ->
+                _notes.update { notesInDb }
+            }
         }
-    }
+    }*/
+
+    // Forma 2
+    val notes = noteRepository
+        .observeAll()
+        .flowOn(Dispatchers.IO)
+        //.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val notesCount = notes
+        .map {
+            it.size
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
+
+    val buttonEnabled = _state.map {
+        it.text.isNotEmpty()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     private fun insertNote(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -68,7 +72,6 @@ class MainViewModel @Inject constructor(
             // y luego room se encarga de ejecutar esta operación de inserción en la
             // base de datos SQLite en un hilo de fondo.
             noteRepository.insert(note)
-            refreshNotes()
         }
     }
 
@@ -93,7 +96,6 @@ class MainViewModel @Inject constructor(
     fun deleteNote(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
             noteRepository.delete(note)
-            refreshNotes()
             _events.send(Event.ShowMessage("Deleted note!"))
         }
     }
