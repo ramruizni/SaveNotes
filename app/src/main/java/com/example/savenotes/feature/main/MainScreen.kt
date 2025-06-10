@@ -1,15 +1,18 @@
 package com.example.savenotes.feature.main
 
+import android.widget.Space
 import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +39,8 @@ fun MainScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
+    val notesCount by viewModel.notesCount.collectAsStateWithLifecycle()
+    val buttonEnabled by viewModel.buttonEnabled.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = context) {
         viewModel.events.collect { event ->
@@ -62,11 +67,21 @@ fun MainScreen(
                 }
             )
             Spacer(modifier = Modifier.height(10.dp))
-            Button(
-                onClick = { viewModel.addNote() }
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    enabled = buttonEnabled,
+                    onClick = { viewModel.addNote() }
+                ) {
+                    Text(
+                        text = "Add note"
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Add note"
+                    text = "Notes count: $notesCount"
                 )
             }
 

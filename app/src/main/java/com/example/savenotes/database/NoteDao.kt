@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 // las DB suelen tener estas operaciones: CRUD
 // Create, Read, Update, Delete
@@ -27,6 +28,9 @@ interface NoteDao {
     // listos.
     suspend fun getAll(): List<Note>  // Especifica el tipo de retorno. Room mapeará
     // automáticamente las filas recuperadas de la tabla "notes" a una lista de objetos Note
+
+    @Query("SELECT * FROM notes")
+    fun observeAll(): Flow<List<Note>>
 
     //se define un metodo para insertar una nota
     //Room generará el código SQL necesario para insertar la entidad o entidades
