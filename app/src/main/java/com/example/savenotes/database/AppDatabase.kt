@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase
 // 'version = 1' define la versión actual de tu esquema de base de datos, si
 // realizáramos cambios en la estructura de tu base de datos, deberíamos incrementar
 // este número de versión, para el manejo de las migraciones de la base de datos.
-@Database(entities = [Note::class], version = 1)
+@Database(entities = [NoteDbDto::class], version = 1)
 //'class AppDatabase' debe ser abstract porque Room generará la implementación concreta
 // de esta clase durante la compilación.
 //': RoomDatabase()' indica que AppDatabase hereda de androidx.room.RoomDatabase.

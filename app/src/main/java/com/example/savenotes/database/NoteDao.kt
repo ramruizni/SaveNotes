@@ -26,11 +26,11 @@ interface NoteDao {
     // al ser una función suspend Room se encargará de ejecutar la consulta en un hilo
     // de fondo y suspenderá la coroutine que la llama hasta que los resultados estén
     // listos.
-    suspend fun getAll(): List<Note>  // Especifica el tipo de retorno. Room mapeará
+    suspend fun getAll(): List<NoteDbDto>  // Especifica el tipo de retorno. Room mapeará
     // automáticamente las filas recuperadas de la tabla "notes" a una lista de objetos Note
 
     @Query("SELECT * FROM notes")
-    fun observeAll(): Flow<List<Note>>
+    fun observeAll(): Flow<List<NoteDbDto>>
 
     //se define un metodo para insertar una nota
     //Room generará el código SQL necesario para insertar la entidad o entidades
@@ -38,7 +38,7 @@ interface NoteDao {
     @Insert
     // El metodo 'insert' toma un solo objeto Note como parámetro, que es la nota que
     // se desea insertar en la base de datos.
-    suspend fun insert(note: Note)
+    suspend fun insert(note: NoteDbDto)
 
     //Define un metodo para eliminar una nota
     //Room generará el código para eliminar la fila o filas correspondientes a las
@@ -48,5 +48,5 @@ interface NoteDao {
     //El metodo toma un objeto Note como parámetro. Room usará la clave primaria (id)
     // del objeto note proporcionado para encontrar y eliminar la fila correspondiente
     // en la tabla "notes".
-    suspend fun delete(note: Note)
+    suspend fun delete(note: NoteDbDto)
 }
