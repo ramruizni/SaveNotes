@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 // se especifica el nombre "notes"
 @Entity(tableName = "notes")
 //Cada instancia de esta clase representará una fila individual de la tabla "notes"
-data class Note(
+data class NoteDbDto(
     //@PrimaryKey, que marca la propiedad que sigue (id), se encarga de identificar de
     //manera única cada fila en la tabla de base de datos correspondiente.
     // 'autoGenerate = true' es un parámetro opcional, y al ponerlo en true le estamos

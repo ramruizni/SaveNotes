@@ -2,7 +2,7 @@ package com.example.savenotes.feature.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.savenotes.database.Note
+import com.example.savenotes.repository.Note
 import com.example.savenotes.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
