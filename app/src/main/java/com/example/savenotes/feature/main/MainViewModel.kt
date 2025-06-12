@@ -65,12 +65,6 @@ class MainViewModel @Inject constructor(
 
     private fun insertNote(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
-            //? se utiliza porque noteDao podría ser nulo. Si noteDao es nulo, la
-            // llamada a insert(note) simplemente no ocurrirá, evitando un
-            // NullPointerException.
-            //' noteDao?.insert(note)' llama al metodo suspend fun insert(note: Note),
-            // y luego room se encarga de ejecutar esta operación de inserción en la
-            // base de datos SQLite en un hilo de fondo.
             noteRepository.insert(note)
         }
     }
