@@ -15,6 +15,8 @@ class NoteDataSourceImpl(
         return noteDao.getAll().map { it.toNote() }
     }
 
+    //En este caso, listoFlow sería cada List<NoteDbDto> perteneciente a la emisión actual del
+    // Flow.
     override fun observeAll(): Flow<List<Note>> = noteDao.observeAll().map { listFlow ->
         listFlow.map { it.toNote() }
     }
