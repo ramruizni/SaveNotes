@@ -7,19 +7,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.savenotes.navigation.main.MainRoute
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel  = hiltViewModel(),
+    viewModel: LoginViewModel = hiltViewModel(),
     navController: NavHostController
-){
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -32,9 +37,20 @@ fun LoginScreen(
                 text = "Login Screen",
             )
             Spacer(modifier = Modifier.weight(1f))
+            TextField(
+                value = state.email,
+                onValueChange = { email ->
+                    viewModel.setEmail(email)
+                }
+            )
+            Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = {
-                    navController.navigate(MainRoute)
+                    navController.navigate(
+                        MainRoute(
+                            email = state.email
+                        )
+                    )
                 }
             ) {
                 Text("Navigate to Main")

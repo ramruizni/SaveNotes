@@ -21,7 +21,7 @@ import javax.inject.Inject
 data class MainState(
     val isLoading: Boolean = false,
 
-    val text: String = ""
+    val text: String = "",
 )
 
 @HiltViewModel
