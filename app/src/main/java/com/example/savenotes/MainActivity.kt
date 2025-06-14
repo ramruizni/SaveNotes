@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.savenotes.feature.main.MainScreen
+import com.example.savenotes.navigation.NavigationHost
 import com.example.savenotes.ui.theme.SaveNotesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SaveNotesTheme {
-                MainScreen()
+                NavigationHost()
             }
         }
     }
