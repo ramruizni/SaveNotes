@@ -1,8 +1,6 @@
 package com.example.savenotes.feature.login
 
 import androidx.lifecycle.ViewModel
-import com.example.savenotes.feature.main.MainState
-import com.example.savenotes.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

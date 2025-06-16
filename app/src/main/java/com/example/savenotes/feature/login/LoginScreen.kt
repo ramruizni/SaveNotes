@@ -46,7 +46,10 @@ fun LoginScreen(
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = {
+                    //'navigate' es el metodo principal de NavController que se utiliza
+                    // para cambiar al destino especificado
                     navController.navigate(
+                        //'MainRoute' vendría siendo el destino al que queremos navegar
                         MainRoute(
                             email = state.email
                         )
