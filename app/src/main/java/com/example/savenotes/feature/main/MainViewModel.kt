@@ -47,40 +47,17 @@ class MainViewModel @Inject constructor(
         }
     }*/
 
-    //Este es el nuevo interfaz de notes, pero generado a partir de Flowoperators
     // Forma 2
     val notes = noteRepository
-        .observeAll() //Este Flow emitirá una nueva lista de notas (List<Note>) cada vez
-                    // que los datos de la tabla de notas cambien en la base de datos.
-        .flowOn(Dispatchers.IO) //Con este flowoperator todas las operaciones upstream se
-                                // ejecutarán en un hilo del pool de Dispatchers.IO, sin
-                                // embargo las operaciones downstream no se verán afectadas
-                                // y se ejecutarán en el contexto del colector, a menos que
-                                // se use otro flowOn más adelante.
-        //.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
-        //.statteIn convierte un Flow "Frío", en un StateFlow (caliente). Este StateFlow mantiene
-        // un único valor de estado actual y emite actualizaciones de ese estado a sus colectores
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-        // viewModelScope representa el CoroutineScope en el que se lanzará la coroutine
-        // SharingStarted.WhileSubscribed(5000) define la estrategia para iniciar y detener
-        // la colección del Flow aguas arriba, la cual dice que el Flow comenzará a colectarse
-        // cuando haya al menos un colector activo, pero si este colcetor baja a cero, el Flow
-        // no se detiene automáticamente, sino que espera 5 segundos para hacer esto , pero si
-        // dentro de esos 5 segundos se suscribe un nuevo colector, la colección del Flow aguas
-        // arriba continuaría (esto es particularmente útil par alas rotaciones de pantalla)
-        //emptyList() define el valor inicial del StateFlow<List<Note>> antes de que se emita el
-        // primer valor
+        .observeAll()
+        .flowOn(Dispatchers.IO)
 
     val notesCount = notes
-        //map es un flowoperator que transforma cada valor emitido por el Flow, es decir, cada
-        // List<Note> en ete caso
         .map {
             it.size
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
     val buttonEnabled = _state.map {
-        //isNotEmpty() Es un metodo estándar de Kotlin para Strings que devuelve true si
-        // la cadena tiene al menos un carácter, y false si está vacía.
         it.text.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
