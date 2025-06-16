@@ -51,6 +51,7 @@ class MainViewModel @Inject constructor(
     val notes = noteRepository
         .observeAll()
         .flowOn(Dispatchers.IO)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val notesCount = notes
         .map {
