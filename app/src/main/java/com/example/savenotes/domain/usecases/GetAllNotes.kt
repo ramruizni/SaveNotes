@@ -7,7 +7,7 @@ class GetAllNotes(
     private val repository: NoteRepository
 ) {
 
-    suspend fun invoke(): List<Note> {
+    suspend operator fun invoke(): List<Note> {
         return repository.getAll()
     }
 }
