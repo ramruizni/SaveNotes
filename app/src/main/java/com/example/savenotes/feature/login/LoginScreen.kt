@@ -71,7 +71,14 @@ fun LoginScreen(
                     viewModel.onLoginClick()
                 }
             ) {
-                Text("Navigate to Main")
+                Text("Navigate to Main (Notes)")
+            }
+            Button(
+                onClick = {
+                    viewModel.onPokemonListClick()
+                }
+            ) {
+                Text("Navigate to Pokemon List")
             }
         }
     }

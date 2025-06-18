@@ -3,7 +3,9 @@ package com.example.savenotes.feature.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savenotes.domain.login.usecases.ValidateEmail
+import com.example.savenotes.domain.pokemon.usecases.FetchPokemonList
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +20,8 @@ data class LoginState(
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val validateEmail: ValidateEmail
+    private val validateEmail: ValidateEmail,
+    private val fetchPokemonList: FetchPokemonList
 ): ViewModel() {
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
@@ -38,6 +41,14 @@ class LoginViewModel @Inject constructor(
                 if (error != null) Event.ShowError(message = error)
                 else Event.NavigateToMain
             )
+        }
+    }
+
+    fun onPokemonListClick() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val pokemonList = fetchPokemonList()
+            val pokemonListMessage = pokemonList.map { it.name }.joinToString(" ")
+            _events.send(Event.ShowError(message = pokemonListMessage))
         }
     }
 

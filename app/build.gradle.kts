@@ -74,4 +74,16 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    // Retrofit
+    implementation(libs.retrofit)
+
+// Gson Converter
+    implementation(libs.converter.gson)
+
+// OkHttp (usually included transitively by Retrofit, but good to have explicit control)
+    implementation(libs.okhttp) // Check for the latest stable version
+
+// Kotlin Coroutines for asynchronous operations
+    implementation(libs.kotlinx.coroutines.android) // Check for the latest stable version
 }
