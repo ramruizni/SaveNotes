@@ -1,4 +1,4 @@
-package com.example.savenotes.repository
+package com.example.savenotes.domain.models
 
 data class Note(
     val id: Int = 0,

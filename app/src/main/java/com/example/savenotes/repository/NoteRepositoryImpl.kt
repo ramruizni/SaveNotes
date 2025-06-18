@@ -1,6 +1,7 @@
 package com.example.savenotes.repository
 
 import com.example.savenotes.datasource.NoteDataSource
+import com.example.savenotes.domain.models.Note
 import kotlinx.coroutines.flow.Flow
 
 class NoteRepositoryImpl(

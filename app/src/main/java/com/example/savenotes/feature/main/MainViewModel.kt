@@ -3,7 +3,8 @@ package com.example.savenotes.feature.main
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.savenotes.repository.Note
+import com.example.savenotes.domain.models.Note
+import com.example.savenotes.domain.usecases.ObserveAllNotes
 import com.example.savenotes.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +30,7 @@ data class MainState(
 class MainViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val noteRepository: NoteRepository,
+    observeAllNotes: ObserveAllNotes
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainState())
@@ -46,8 +48,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    val notes = noteRepository
-        .observeAll()
+    val notes = observeAllNotes()
         .flowOn(Dispatchers.IO)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
