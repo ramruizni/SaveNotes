@@ -1,5 +1,6 @@
 package com.example.savenotes.feature.main
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savenotes.repository.Note
@@ -26,6 +27,7 @@ data class MainState(
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val noteRepository: NoteRepository,
 ) : ViewModel() {
 
@@ -35,19 +37,15 @@ class MainViewModel @Inject constructor(
     private val _events = Channel<Event>()
     val events = _events.receiveAsFlow()
 
-    // Forma 1
-    /*private val _notes = MutableStateFlow<List<Note>>(emptyList())
-    val notes = _notes.asStateFlow()
-
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            noteRepository.observeAll().collect { notesInDb ->
-                _notes.update { notesInDb }
-            }
+        val email = savedStateHandle.get<String>("email").orEmpty()
+        viewModelScope.launch {
+            _events.send(
+                Event.ShowMessage("You used email: $email")
+            )
         }
-    }*/
+    }
 
-    // Forma 2
     val notes = noteRepository
         .observeAll()
         .flowOn(Dispatchers.IO)
