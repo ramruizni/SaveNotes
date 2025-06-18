@@ -1,7 +1,7 @@
 package com.example.savenotes.datasource.converters
 
 import com.example.savenotes.database.NoteDbDto
-import com.example.savenotes.domain.models.Note
+import com.example.savenotes.domain.notes.models.Note
 
 fun Note.toDbDto(): NoteDbDto {
     return NoteDbDto(

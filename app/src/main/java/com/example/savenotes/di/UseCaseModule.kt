@@ -1,7 +1,8 @@
 package com.example.savenotes.di
 
-import com.example.savenotes.domain.usecases.GetAllNotes
-import com.example.savenotes.domain.usecases.ObserveAllNotes
+import com.example.savenotes.domain.login.usecases.ValidateEmail
+import com.example.savenotes.domain.notes.usecases.GetAllNotes
+import com.example.savenotes.domain.notes.usecases.ObserveAllNotes
 import com.example.savenotes.repository.NoteRepository
 import dagger.Module
 import dagger.Provides
@@ -28,4 +29,8 @@ object UseCaseModule {
     ): ObserveAllNotes {
         return ObserveAllNotes(repository)
     }
+
+    @Singleton
+    @Provides
+    fun provideValidateEmail() : ValidateEmail = ValidateEmail()
 }

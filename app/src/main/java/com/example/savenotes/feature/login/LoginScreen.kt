@@ -1,5 +1,6 @@
 package com.example.savenotes.feature.login
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,9 +10,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,7 +26,26 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
+    val context = LocalContext.current
+
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(context) {
+        viewModel.events.collect { event ->
+            when(event) {
+                is LoginViewModel.Event.NavigateToMain -> {
+                    navController.navigate(
+                        MainRoute(
+                            email = state.email
+                        )
+                    )
+                }
+                is LoginViewModel.Event.ShowError -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     Scaffold { innerPadding ->
         Column(
@@ -46,14 +68,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = {
-                    //'navigate' es el metodo principal de NavController que se utiliza
-                    // para cambiar al destino especificado
-                    navController.navigate(
-                        //'MainRoute' vendría siendo el destino al que queremos navegar
-                        MainRoute(
-                            email = state.email
-                        )
-                    )
+                    viewModel.onLoginClick()
                 }
             ) {
                 Text("Navigate to Main")

@@ -3,7 +3,7 @@ package com.example.savenotes.datasource
 import com.example.savenotes.database.NoteDao
 import com.example.savenotes.datasource.converters.toDbDto
 import com.example.savenotes.datasource.converters.toNote
-import com.example.savenotes.domain.models.Note
+import com.example.savenotes.domain.notes.models.Note
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

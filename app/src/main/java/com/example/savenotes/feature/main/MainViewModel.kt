@@ -3,8 +3,8 @@ package com.example.savenotes.feature.main
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.savenotes.domain.models.Note
-import com.example.savenotes.domain.usecases.ObserveAllNotes
+import com.example.savenotes.domain.notes.models.Note
+import com.example.savenotes.domain.notes.usecases.ObserveAllNotes
 import com.example.savenotes.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

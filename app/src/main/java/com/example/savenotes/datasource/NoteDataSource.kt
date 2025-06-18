@@ -1,6 +1,6 @@
 package com.example.savenotes.datasource
 
-import com.example.savenotes.domain.models.Note
+import com.example.savenotes.domain.notes.models.Note
 import kotlinx.coroutines.flow.Flow
 
 interface NoteDataSource {
