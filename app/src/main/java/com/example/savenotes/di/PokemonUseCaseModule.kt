@@ -1,7 +1,6 @@
 package com.example.savenotes.di
 
 import com.example.savenotes.PokemonApi
-import com.example.savenotes.domain.login.usecases.ValidateEmail
 import com.example.savenotes.domain.pokemon.usecases.FetchPokemonList
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -14,7 +13,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object PokemonApiModule {
+object PokemonUseCaseModule {
 
     @Provides
     @Singleton

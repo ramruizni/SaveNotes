@@ -1,6 +1,5 @@
 package com.example.savenotes.di
 
-import com.example.savenotes.domain.login.usecases.ValidateEmail
 import com.example.savenotes.domain.notes.usecases.GetAllNotes
 import com.example.savenotes.domain.notes.usecases.ObserveAllNotes
 import com.example.savenotes.repository.NoteRepository
@@ -12,7 +11,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object UseCaseModule {
+object NotesUseCaseModule {
 
     @Singleton
     @Provides
@@ -30,7 +29,4 @@ object UseCaseModule {
         return ObserveAllNotes(repository)
     }
 
-    @Singleton
-    @Provides
-    fun provideValidateEmail() : ValidateEmail = ValidateEmail()
 }
