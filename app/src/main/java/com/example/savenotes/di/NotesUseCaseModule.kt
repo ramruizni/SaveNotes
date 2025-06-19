@@ -1,6 +1,8 @@
 package com.example.savenotes.di
 
+import com.example.savenotes.domain.notes.usecases.DeleteNote
 import com.example.savenotes.domain.notes.usecases.GetAllNotes
+import com.example.savenotes.domain.notes.usecases.InsertNote
 import com.example.savenotes.domain.notes.usecases.ObserveAllNotes
 import com.example.savenotes.repository.NoteRepository
 import dagger.Module
@@ -28,5 +30,17 @@ object NotesUseCaseModule {
     ): ObserveAllNotes {
         return ObserveAllNotes(repository)
     }
+
+    @Singleton
+    @Provides
+    fun provideInsertNote(
+        repository: NoteRepository
+    ): InsertNote = InsertNote(repository)
+
+    @Singleton
+    @Provides
+    fun provideDeleteNote(
+        repository: NoteRepository
+    ): DeleteNote = DeleteNote(repository)
 
 }

@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savenotes.domain.notes.models.Note
+import com.example.savenotes.domain.notes.usecases.DeleteNote
+import com.example.savenotes.domain.notes.usecases.InsertNote
 import com.example.savenotes.domain.notes.usecases.ObserveAllNotes
 import com.example.savenotes.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,8 +31,9 @@ data class MainState(
 @HiltViewModel
 class MainViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val noteRepository: NoteRepository,
-    observeAllNotes: ObserveAllNotes
+    observeAllNotes: ObserveAllNotes,
+    private val insertNote: InsertNote,
+    private val deleteNote: DeleteNote
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MainState())
@@ -71,7 +74,7 @@ class MainViewModel @Inject constructor(
 
     private fun insertNote(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
-            noteRepository.insert(note)
+            insertNote.invoke(note)
         }
     }
 
@@ -95,7 +98,7 @@ class MainViewModel @Inject constructor(
 
     fun deleteNote(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
-            noteRepository.delete(note)
+            deleteNote.invoke(note)
             _events.send(Event.ShowMessage("Deleted note!"))
         }
     }
