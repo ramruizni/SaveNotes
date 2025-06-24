@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.savenotes.navigation.main.MainRoute
+import com.example.savenotes.navigation.pokemonlist.PokemonListRoute
 
 @Composable
 fun LoginScreen(
@@ -32,14 +33,17 @@ fun LoginScreen(
 
     LaunchedEffect(context) {
         viewModel.events.collect { event ->
-            when(event) {
+            when (event) {
                 is LoginViewModel.Event.NavigateToMain -> {
                     navController.navigate(
-                        MainRoute(
-                            email = state.email
-                        )
+                        MainRoute(email = state.email)
                     )
                 }
+
+                is LoginViewModel.Event.NavigateToPokemonList -> {
+                    navController.navigate(PokemonListRoute)
+                }
+
                 is LoginViewModel.Event.ShowError -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                 }

@@ -1,6 +1,6 @@
-package com.example.savenotes
+package com.example.savenotes.remote
 
-import com.example.savenotes.domain.pokemon.models.PokemonResponse
+import com.example.savenotes.remote.dtos.PokemonResponseApiDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -20,11 +20,11 @@ interface PokemonApi {
         // se añadirá a la URL de la solicitud como parámetro de consulta.
         //'limit: Int = 100': Si no se definiera este parámetro, Kotlin le definiría igual el valor
         // de 100 por defecto
-        @Query("limit") limit: Int = 20,
+        @Query("limit") limit: Int,
         //'limit' especifica cuántos ítems obtener, y offset especifica cuántos ítmes saltar
         // desde el inicio de la lista total
-        @Query("offset") offset: Int = 0
+        @Query("offset") offset: Int
         //La función getPokemonList debe retornar una lista del tipo PokemonResponse que es una
         // data class
-    ): PokemonResponse
+    ): PokemonResponseApiDto
 }

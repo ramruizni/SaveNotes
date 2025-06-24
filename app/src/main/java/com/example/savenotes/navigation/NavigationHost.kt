@@ -6,8 +6,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.savenotes.feature.login.LoginScreen
 import com.example.savenotes.feature.main.MainScreen
+import com.example.savenotes.feature.pokemonlist.PokemonListScreen
 import com.example.savenotes.navigation.login.LoginRoute
 import com.example.savenotes.navigation.main.MainRoute
+import com.example.savenotes.navigation.pokemonlist.PokemonListRoute
 
 @Composable
 fun NavigationHost() {
@@ -26,6 +28,10 @@ fun NavigationHost() {
 
         composable<MainRoute> {
             MainScreen()
+        }
+
+        composable<PokemonListRoute> {
+            PokemonListScreen()
         }
     }
 }

@@ -78,12 +78,15 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
 
-// Gson Converter
+    // Gson Converter
     implementation(libs.converter.gson)
 
-// OkHttp (usually included transitively by Retrofit, but good to have explicit control)
+    // OkHttp (usually included transitively by Retrofit, but good to have explicit control)
     implementation(libs.okhttp) // Check for the latest stable version
 
-// Kotlin Coroutines for asynchronous operations
+    // Kotlin Coroutines for asynchronous operations
     implementation(libs.kotlinx.coroutines.android) // Check for the latest stable version
+
+    // Network images
+    implementation(libs.coil.compose)
 }

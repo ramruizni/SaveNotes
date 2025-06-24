@@ -1,4 +1,4 @@
-package com.example.savenotes.database
+package com.example.savenotes.database.dtos
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

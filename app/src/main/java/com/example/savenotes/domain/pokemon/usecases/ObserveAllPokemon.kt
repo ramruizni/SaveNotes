@@ -2,11 +2,10 @@ package com.example.savenotes.domain.pokemon.usecases
 
 import com.example.savenotes.domain.pokemon.models.Pokemon
 import com.example.savenotes.repository.PokemonRepository
+import kotlinx.coroutines.flow.Flow
 
-class FetchPokemonList(
+class ObserveAllPokemon(
     private val repository: PokemonRepository
 ) {
-    suspend operator fun invoke(limit: Int, offset: Int): List<Pokemon> {
-        return repository.fetchPokemonList(limit, offset)
-    }
+    operator fun invoke(): Flow<List<Pokemon>> = repository.observeAllPokemon()
 }
