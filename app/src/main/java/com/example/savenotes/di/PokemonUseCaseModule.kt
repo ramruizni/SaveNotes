@@ -17,14 +17,24 @@ object PokemonUseCaseModule {
 
     @Provides
     @Singleton
+    //Con este metodo obtenemos una instancia de retrofit
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
+        //La url pasada a 'baseUrl' va a ser la base para todas las llamadas de red realizadas
+        // por la instanci de Retrofit
         .baseUrl("https://pokeapi.co/api/v2/")
+        //'GsonConverterFactory' es el convertidor para la biblioteca GSON, y
+        // 'GsonBuilder().create()' crea una instancia de Gson. Esta parte en general se
+        // encarga de convertir las respuesta JSON en objetos Kotlin y viceversa.
         .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+        // build termina de construir la instancia de Retrofit
         .build()
 
     @Provides
     @Singleton
     fun providePokemonApi(retrofit: Retrofit): PokemonApi =
+        //Este es un metodo estándar de Retrofit para crear una implementación concreta de una
+        // interfaz de API, que en este caso es PokemoApi. Así que acá Retrofit genera el código
+        // necesario para manejar las llamadas de red definidas en la interfaz
         retrofit.create(PokemonApi::class.java)
 
     @Singleton
