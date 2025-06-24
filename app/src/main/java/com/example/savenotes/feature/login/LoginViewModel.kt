@@ -47,6 +47,8 @@ class LoginViewModel @Inject constructor(
     fun onPokemonListClick() {
         viewModelScope.launch(Dispatchers.IO) {
             val pokemonList = fetchPokemonList()
+            //'.joinToString(" ")' tomala lista de cadenas y los concatena en una única cadena,
+            // y " " especifica que cada nombre debe estar separado por un espacio
             val pokemonListMessage = pokemonList.map { it.name }.joinToString(" ")
             _events.send(Event.ShowError(message = pokemonListMessage))
         }

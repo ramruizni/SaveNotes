@@ -7,7 +7,6 @@ import com.example.savenotes.domain.notes.models.Note
 import com.example.savenotes.domain.notes.usecases.DeleteNote
 import com.example.savenotes.domain.notes.usecases.InsertNote
 import com.example.savenotes.domain.notes.usecases.ObserveAllNotes
-import com.example.savenotes.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -42,14 +41,6 @@ class MainViewModel @Inject constructor(
     private val _events = Channel<Event>()
     val events = _events.receiveAsFlow()
 
-    //savedStateHandle es la forma estándar de recibir argumentos de navegación
-    // en un ViewModel cuando se usa Jetpack Navigation
-    //'.get<String>("email")' intenta recuperar un valor del SavedStateHandle asociado
-    // con la clave "email", y se espera que sea un valor de tipo String.
-    //La biblioteca de navegación es la encarghada de colocar el valor de email en el
-    // SavedStateHandle, ya que fue un parámetro recibido en la ruta asociada a este Screen
-    //'orEmpty()' se encarga de inicilizar 'email' con una cadena vacía en caso de que
-    //'.get<String>("email")' devuelva un nullx
     init {
         val email = savedStateHandle.get<String>("email").orEmpty()
         viewModelScope.launch {
