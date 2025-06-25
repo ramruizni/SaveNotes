@@ -15,6 +15,12 @@ import androidx.compose.ui.unit.Dp
 import com.example.savenotes.ui.util.noRippleClickable
 
 @Composable
+//'isLoading' determina si si el indicador de carga debe mostrarse o no
+//'customHeight: Dp? = null' es un parámetro opcional que permite especificar una altura
+// personalizada para el Box, si es null, como en este caso, el Box ocupará every el tamaño
+// disponible
+//'isVisible' es un parámetro que controla si 'CircularProgressIndicator' dentro del Box
+// es visible, por lo general se coloca en 'true'
 fun BoxLoadingIndicator(isLoading: Boolean, customHeight: Dp? = null, isVisible: Boolean = true) {
 
     val modifier =
@@ -23,9 +29,15 @@ fun BoxLoadingIndicator(isLoading: Boolean, customHeight: Dp? = null, isVisible:
 
     if (isLoading) {
         Box(
+            //'.noRippleClickable {}' hace que el área intercepte los eventos de clic para
+            // que no pasen al contenido detrás de ella, pero sin mostrar el efecto visual de
+            // ripple.
             modifier = modifier.background(Color.Transparent).noRippleClickable {},
             contentAlignment = Alignment.Center,
         ) {
+            //'CircularProgressIndicator' muestra una animación de progreso circular.
+            //'MaterialTheme.colorScheme.primary' establece el color primario definido en el
+            // Material Design de la aplicación
             if (isVisible) CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
         }
     }
