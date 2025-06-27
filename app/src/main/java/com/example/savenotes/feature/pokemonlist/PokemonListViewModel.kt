@@ -40,17 +40,9 @@ class PokemonListViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(isLoading = true) }
-            //El bloque 'try-catch' se utiliza para el manejo de excepciones, pues
-            // 'refreshPokemonList()' implica una llamado a red quepodría presentar varios
-            // errores
             try {
                 refreshPokemonList()
-                //El bloque 'catch' se ejecutaría en caso de que el código dentro del bloque
-                // 'try' lanzace una excepción. Esta excepción quedaría guardada dentro de 'e'
             } catch (e: Exception) {
-                //'e.message' obtiene el mensaje descriptivo de la excepción, y '.orEmpty()'
-                // devolvería una cadena vacía si el valor de 'e.message' fuese 'null', esto
-                // con el objetivo de evitar un NullPointerException.
                 _events.send(Event.ShowMessage(e.message.orEmpty()))
             }
             _state.update { it.copy(isLoading = false) }
