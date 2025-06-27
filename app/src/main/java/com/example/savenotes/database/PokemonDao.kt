@@ -10,9 +10,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PokemonDao {
 
-    //'OnConflictStrategy.REPLACE' indica que si intentamos insertar un PokemonDbDto
-    // que ya existe, es decir un pokemon con el mismo ID, la fila existente será reemplazada
-    // por la nueva
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveAll(pokemon: List<PokemonDbDto>)
 
